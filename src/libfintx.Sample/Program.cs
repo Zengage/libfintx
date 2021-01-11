@@ -23,7 +23,7 @@ namespace libfintx.Sample
             [Option('i', "userid", Required = true, HelpText = "Set the FinTS user id.")]
             public string UserId { get; set; }
 
-            [Option('a', "accountnumber", Required = true, HelpText = "Set the FinTS bank account number.")]
+            [Option('a', "accountnumber", Required = false, Default = "", HelpText = "Set the FinTS bank account number. Not required for operation==AllBalances")]
             public string Account { get; set; }
 
             [Option('u', "url", Required = true, HelpText = "Set the FinTS URL.")]
