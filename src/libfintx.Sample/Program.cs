@@ -12,7 +12,8 @@ namespace libfintx.Sample
         {
             Accounts,
             Balance,
-            Transactions
+            Transactions,
+            AllBalances
         }
 
         class Options
@@ -76,6 +77,9 @@ namespace libfintx.Sample
                     case OperationType.Transactions:
                         Transactions(client);
                         break;
+                    case OperationType.AllBalances:
+                        AllBalances(client);
+                        break;
                 }
             });
 
@@ -123,6 +127,37 @@ namespace libfintx.Sample
             foreach (var trans in result.Data)
             {
                 Console.WriteLine("Transaction - Start Date: {0}, Amount: {1}\u20AC", trans.StartDate, trans.EndBalance - trans.StartBalance);
+            }
+        }
+
+        private static async void AllBalances(FinTsClient client)
+        {
+            var result = await client.Accounts(new TANDialog(WaitForTanAsync));
+            if (!result.IsSuccess)
+            {
+                HBCIOutput(result.Messages);
+                return;
+            }
+
+            foreach (var account in result.Data)
+            {
+                client.activeAccount = account;
+                if (account.AccountPermissions.Exists(x => x.Segment == "HKSAL"))
+                {
+                    var balance = await client.Balance(new libfintx.TANDialog(WaitForTanAsync));
+                    if (!balance.IsSuccess)
+                    {
+                        HBCIOutput(balance.Messages);
+                        Console.WriteLine("Account - Balance:           | Holder: {0,-32} | Number: {1,12} | Type: {2} | Error when trying to get Balance", account.AccountOwner, account.AccountNumber);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Account - Balance: {0,8}\u20AC | Holder: {1,-32} | Number: {2,12} | Type: {3}", balance.Data.Balance, account.AccountOwner, account.AccountNumber, account.AccountType);
+                    }
+                } else
+                {
+                    Console.WriteLine("Account -                    | Holder: {0,32} | Number: {1,12} | Type: {2} | Balance not possible for this Account", account.AccountOwner, account.AccountNumber);
+                }
             }
         }
 
