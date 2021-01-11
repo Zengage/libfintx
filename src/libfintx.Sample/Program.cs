@@ -17,8 +17,11 @@ namespace libfintx.Sample
 
         class Options
         {
-            [Option('b', "bic", Required = true, HelpText = "Set the FinTS bank code.")]
+            [Option('b', "blz", Required = true, HelpText = "Set the FinTS bank code.")]
             public int BankCode { get; set; }
+
+            [Option('d', "bic", Required = true, HelpText = "Set the FinTS BIC.")]
+            public string Bic { get; set; }
 
             [Option('i', "userid", Required = true, HelpText = "Set the FinTS user id.")]
             public string UserId { get; set; }
@@ -56,6 +59,7 @@ namespace libfintx.Sample
                     Url = o.Url,
                     Account = o.Account,
                     Blz = o.BankCode,
+                    Bic = o.Bic,
                     Pin = o.Pin,
                     UserId = o.UserId,
                 };
