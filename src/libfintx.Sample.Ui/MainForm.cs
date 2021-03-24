@@ -212,6 +212,7 @@ namespace libfintx.Sample.Ui
             if (sync.IsSuccess)
             {
                 // TAN-Verfahren
+                client.HITAB = txt_tan_medium.Text;
                 client.HIRMS = txt_tanverfahren.Text;
 
                 var accounts = await client.Accounts(_tanDialog);
@@ -272,6 +273,7 @@ namespace libfintx.Sample.Ui
             {
                 // TAN-Verfahren
                 client.HIRMS = txt_tanverfahren.Text;
+                client.HITAB = txt_tan_medium.Text;
 
                 if (! await InitTANMedium(client))
                     return;
